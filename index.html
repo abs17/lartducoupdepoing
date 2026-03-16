@@ -1617,26 +1617,28 @@
 
   /* Menu mobile drawer */
   .nav-mobile-menu {
-    display: none;
+    display: flex;
+    flex-direction: column;
     position: fixed;
-    top: 72px; left: 0; right: 0;
+    top: 64px; left: 0; right: 0;
     background: rgba(10,10,10,0.98);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(212,160,23,0.2);
-    padding: 24px 0;
-    z-index: 99;
-    flex-direction: column;
+    z-index: 98;
     gap: 0;
-    transform: translateY(-10px);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.3s ease;
     opacity: 0;
-    transition: opacity 0.3s, transform 0.3s;
     pointer-events: none;
+    /* Caché par défaut — visible seulement sur mobile via media query */
+    visibility: hidden;
   }
   .nav-mobile-menu.open {
-    display: flex;
-    transform: translateY(0);
+    max-height: 500px;
     opacity: 1;
     pointer-events: all;
+    visibility: visible;
   }
   .nav-mobile-menu a,
   .nav-mobile-menu .nav-mobile-item {
@@ -1647,10 +1649,12 @@
     text-transform: uppercase;
     color: var(--gray-light);
     text-decoration: none;
-    padding: 16px 32px;
+    padding: 18px 32px;
     border-bottom: 1px solid rgba(255,255,255,0.04);
     transition: color 0.2s, background 0.2s;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
   .nav-mobile-menu a:hover,
   .nav-mobile-menu .nav-mobile-item:hover { color: var(--gold); background: rgba(212,160,23,0.04); }
@@ -1677,6 +1681,9 @@
     .nav-admin-badge { display: none !important; }
     .nav-burger { display: flex; }
     .nav-logo { font-size: 16px; letter-spacing: 2px; }
+    /* Rendre le menu mobile disponible sur mobile */
+    .nav-mobile-menu { visibility: hidden; }
+    .nav-mobile-menu.open { visibility: visible; }
 
     /* ── HERO ── */
     .hero {
@@ -2631,26 +2638,27 @@ function toggleMobileMenu() {
   const burger = document.getElementById('nav-burger');
   const isOpen = menu.classList.contains('open');
   if (isOpen) {
-    menu.classList.remove('open');
-    burger.classList.remove('open');
+    closeMobileMenu();
   } else {
     menu.classList.add('open');
     burger.classList.add('open');
   }
 }
 function closeMobileMenu() {
-  document.getElementById('nav-mobile-menu').classList.remove('open');
-  document.getElementById('nav-burger').classList.remove('open');
+  const menu   = document.getElementById('nav-mobile-menu');
+  const burger = document.getElementById('nav-burger');
+  if (menu) menu.classList.remove('open');
+  if (burger) burger.classList.remove('open');
 }
-// Fermer le menu au clic en dehors
+// Fermer le menu au clic en dehors — avec délai pour laisser les onclick des items s'exécuter
 document.addEventListener('click', e => {
   const menu   = document.getElementById('nav-mobile-menu');
   const burger = document.getElementById('nav-burger');
+  if (!menu || !burger) return;
   if (!menu.contains(e.target) && !burger.contains(e.target)) {
-    menu.classList.remove('open');
-    burger.classList.remove('open');
+    closeMobileMenu();
   }
-});
+}, true);
 
 // ── Page navigation
 function showPage(name) {
