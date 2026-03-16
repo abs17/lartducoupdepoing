@@ -1615,30 +1615,22 @@
   .nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
   .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-  /* Menu mobile drawer */
+  /* Menu mobile drawer — caché par défaut sur desktop */
   .nav-mobile-menu {
-    display: flex;
+    display: none;
     flex-direction: column;
     position: fixed;
     top: 64px; left: 0; right: 0;
     background: rgba(10,10,10,0.98);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(212,160,23,0.2);
+    border-bottom: 2px solid rgba(212,160,23,0.3);
     z-index: 98;
-    gap: 0;
-    max-height: 0;
     overflow: hidden;
-    transition: max-height 0.35s ease, opacity 0.3s ease;
-    opacity: 0;
-    pointer-events: none;
-    /* Caché par défaut — visible seulement sur mobile via media query */
-    visibility: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease;
   }
   .nav-mobile-menu.open {
-    max-height: 500px;
-    opacity: 1;
-    pointer-events: all;
-    visibility: visible;
+    max-height: 600px;
   }
   .nav-mobile-menu a,
   .nav-mobile-menu .nav-mobile-item {
@@ -1681,9 +1673,8 @@
     .nav-admin-badge { display: none !important; }
     .nav-burger { display: flex; }
     .nav-logo { font-size: 16px; letter-spacing: 2px; }
-    /* Rendre le menu mobile disponible sur mobile */
-    .nav-mobile-menu { visibility: hidden; }
-    .nav-mobile-menu.open { visibility: visible; }
+    /* Menu mobile actif sur mobile */
+    .nav-mobile-menu { display: flex; }
 
     /* ── HERO ── */
     .hero {
@@ -1923,7 +1914,7 @@
   </button>
 
   <!-- Mobile burger -->
-  <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Menu">
+  <button class="nav-burger" id="nav-burger" aria-label="Menu" type="button">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -2636,29 +2627,29 @@ window.addEventListener('DOMContentLoaded', () => {
 function toggleMobileMenu() {
   const menu   = document.getElementById('nav-mobile-menu');
   const burger = document.getElementById('nav-burger');
+  if (!menu || !burger) return;
   const isOpen = menu.classList.contains('open');
-  if (isOpen) {
-    closeMobileMenu();
-  } else {
-    menu.classList.add('open');
-    burger.classList.add('open');
-  }
+  menu.classList.toggle('open', !isOpen);
+  burger.classList.toggle('open', !isOpen);
 }
+
 function closeMobileMenu() {
   const menu   = document.getElementById('nav-mobile-menu');
   const burger = document.getElementById('nav-burger');
-  if (menu) menu.classList.remove('open');
+  if (menu)   menu.classList.remove('open');
   if (burger) burger.classList.remove('open');
 }
-// Fermer le menu au clic en dehors — avec délai pour laisser les onclick des items s'exécuter
-document.addEventListener('click', e => {
+
+// Fermer si clic hors menu ET hors burger (sans capture pour éviter les conflits)
+document.addEventListener('click', function(e) {
   const menu   = document.getElementById('nav-mobile-menu');
   const burger = document.getElementById('nav-burger');
   if (!menu || !burger) return;
+  if (!menu.classList.contains('open')) return;
   if (!menu.contains(e.target) && !burger.contains(e.target)) {
     closeMobileMenu();
   }
-}, true);
+});
 
 // ── Page navigation
 function showPage(name) {
@@ -3227,8 +3218,17 @@ function showToast(msg) {
 // INIT
 // ══════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
-  initAuth();          // vérif session admin
-  applyStoredImages(); // toujours appliquer les images (visiteur aussi voit les photos)
+  // ── Burger menu — branché ici pour garantir que le DOM est prêt
+  const burgerBtn = document.getElementById('nav-burger');
+  if (burgerBtn) {
+    burgerBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleMobileMenu();
+    });
+  }
+
+  initAuth();            // vérif session admin
+  applyStoredImages();   // toujours appliquer les images
   applyPublicSettings(); // appliquer les settings visibles publiquement
 });
 
