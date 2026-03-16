@@ -1914,18 +1914,19 @@
   </button>
 
   <!-- Mobile burger -->
-  <button class="nav-burger" id="nav-burger" aria-label="Menu" type="button">
+  <button class="nav-burger" id="nav-burger" aria-label="Menu" type="button"
+    onclick="this.classList.toggle('open'); var m=document.getElementById('nav-mobile-menu'); if(m){m.classList.toggle('open');}">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
 <!-- Mobile dropdown menu -->
 <div class="nav-mobile-menu" id="nav-mobile-menu">
-  <span class="nav-mobile-item" onclick="showPage('accueil');closeMobileMenu()">Accueil</span>
-  <span class="nav-mobile-item" onclick="showPage('apropos');closeMobileMenu()">Le Fondateur</span>
-  <span class="nav-mobile-item" id="nav-mobile-boutique" onclick="showPage('boutique');closeMobileMenu()">Boutique</span>
-  <span class="nav-mobile-item nav-mobile-cta" onclick="showPage('contact');closeMobileMenu()">Demande de Prestation</span>
-  <span class="nav-mobile-item" onclick="openAdminLogin();closeMobileMenu()"
+  <span class="nav-mobile-item" onclick="showPage('accueil'); document.getElementById('nav-mobile-menu').classList.remove('open'); document.getElementById('nav-burger').classList.remove('open');">Accueil</span>
+  <span class="nav-mobile-item" onclick="showPage('apropos'); document.getElementById('nav-mobile-menu').classList.remove('open'); document.getElementById('nav-burger').classList.remove('open');">Le Fondateur</span>
+  <span class="nav-mobile-item" id="nav-mobile-boutique" onclick="showPage('boutique'); document.getElementById('nav-mobile-menu').classList.remove('open'); document.getElementById('nav-burger').classList.remove('open');">Boutique</span>
+  <span class="nav-mobile-item nav-mobile-cta" onclick="showPage('contact'); document.getElementById('nav-mobile-menu').classList.remove('open'); document.getElementById('nav-burger').classList.remove('open');">Demande de Prestation</span>
+  <span class="nav-mobile-item" onclick="openAdminLogin(); document.getElementById('nav-mobile-menu').classList.remove('open'); document.getElementById('nav-burger').classList.remove('open');"
     style="font-size:11px;color:rgba(212,160,23,0.5);padding:12px 32px;">⚙ Administration</span>
 </div>
 
@@ -2602,51 +2603,37 @@ function createBoxerSVGAccueil() {
   return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800'%3E%3Crect width='600' height='800' fill='%23111'/%3E%3Ctext x='300' y='400' text-anchor='middle' fill='%23D4A017' font-size='14' font-family='sans-serif'%3EImage: Boxeur au ring%3C/text%3E%3C/svg%3E";
 }
 
-// Inject the actual uploaded images using img elements
-// The images exist in the conversation context — we reference them
-window.addEventListener('DOMContentLoaded', () => {
-  // We use the images that were uploaded. Since they're in context as base64 rendered images,
-  // we inject them via JavaScript from the hidden data store below.
-  
-  const IMG_ACCUEIL = document.getElementById('img-accueil-data');
-  const IMG_FONDATEUR = document.getElementById('img-fondateur-data');
-  
-  if (IMG_ACCUEIL) {
-    document.getElementById('hero-img').src = IMG_ACCUEIL.src;
-  }
-  if (IMG_FONDATEUR) {
-    document.getElementById('apropos-img').src = IMG_FONDATEUR.src;
-    document.getElementById('philosophy-img').src = IMG_FONDATEUR.src;
-  }
-});
+// (legacy image injection removed)
 
 
 // ══════════════════════════════════════════
-// MENU MOBILE
+// MENU MOBILE — même pattern que burger-test.html
 // ══════════════════════════════════════════
+var _menuOpen = false;
+
 function toggleMobileMenu() {
-  const menu   = document.getElementById('nav-mobile-menu');
-  const burger = document.getElementById('nav-burger');
-  if (!menu || !burger) return;
-  const isOpen = menu.classList.contains('open');
-  menu.classList.toggle('open', !isOpen);
-  burger.classList.toggle('open', !isOpen);
+  if (_menuOpen) { closeMobileMenu(); } else { openMobileMenu(); }
 }
-
+function openMobileMenu() {
+  _menuOpen = true;
+  var m = document.getElementById('nav-mobile-menu');
+  var b = document.getElementById('nav-burger');
+  if (m) m.classList.add('open');
+  if (b) b.classList.add('open');
+}
 function closeMobileMenu() {
-  const menu   = document.getElementById('nav-mobile-menu');
-  const burger = document.getElementById('nav-burger');
-  if (menu)   menu.classList.remove('open');
-  if (burger) burger.classList.remove('open');
+  _menuOpen = false;
+  var m = document.getElementById('nav-mobile-menu');
+  var b = document.getElementById('nav-burger');
+  if (m) m.classList.remove('open');
+  if (b) b.classList.remove('open');
 }
-
-// Fermer si clic hors menu ET hors burger (sans capture pour éviter les conflits)
+// Fermer si clic dehors
 document.addEventListener('click', function(e) {
-  const menu   = document.getElementById('nav-mobile-menu');
-  const burger = document.getElementById('nav-burger');
-  if (!menu || !burger) return;
-  if (!menu.classList.contains('open')) return;
-  if (!menu.contains(e.target) && !burger.contains(e.target)) {
+  if (!_menuOpen) return;
+  var m = document.getElementById('nav-mobile-menu');
+  var b = document.getElementById('nav-burger');
+  if (m && b && !m.contains(e.target) && !b.contains(e.target)) {
     closeMobileMenu();
   }
 });
@@ -3217,16 +3204,7 @@ function showToast(msg) {
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', () => {
-  // ── Burger menu — branché ici pour garantir que le DOM est prêt
-  const burgerBtn = document.getElementById('nav-burger');
-  if (burgerBtn) {
-    burgerBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      toggleMobileMenu();
-    });
-  }
-
+window.addEventListener('DOMContentLoaded', function() {
   initAuth();            // vérif session admin
   applyStoredImages();   // toujours appliquer les images
   applyPublicSettings(); // appliquer les settings visibles publiquement
@@ -3308,47 +3286,7 @@ function resetImages() {
   }
 }
 
-// Initialisation au chargement
-window.addEventListener('DOMContentLoaded', () => {
-  applyStoredImages();
-
-  // Branchement des inputs fichier du panneau de config
-  const slots = [
-    { inputId: 'cfg-hero',       key: 'hero',       ids: ['hero-img'],                             preview: 'prev-hero' },
-    { inputId: 'cfg-fondateur',  key: 'fondateur',  ids: ['apropos-img','philosophy-img','gallery-img-1'], preview: 'prev-fond1' },
-    { inputId: 'cfg-fondateur2', key: 'fondateur2', ids: ['gallery-img-2'],                        preview: 'prev-fond2' },
-    { inputId: 'cfg-fondateur3', key: 'fondateur3', ids: ['gallery-img-3'],                        preview: 'prev-fond3' },
-  ];
-
-  slots.forEach(slot => {
-    const input = document.getElementById(slot.inputId);
-    if (!input) return;
-    // Pré-remplir la miniature si déjà stockée
-    const stored = localStorage.getItem(IMAGE_KEYS[slot.key]);
-    if (stored) {
-      const prev = document.getElementById(slot.preview);
-      if (prev) { prev.src = stored; prev.style.display = 'block'; }
-    }
-    input.addEventListener('change', function() {
-      if (!this.files[0]) return;
-      loadImageFile(this.files[0], IMAGE_KEYS[slot.key], (base64) => {
-        slot.ids.forEach(id => {
-          const el = document.getElementById(id);
-          if (el) {
-            el.src = base64;
-            el.style.display = 'block';
-            // Cacher le placeholder correspondant
-            const phId = id.replace('gallery-img-', 'ph-');
-            const ph = document.getElementById(phId);
-            if (ph) ph.style.display = 'none';
-          }
-        });
-        const prev = document.getElementById(slot.preview);
-        if (prev) { prev.src = base64; prev.style.display = 'block'; }
-      });
-    });
-  });
-});
+// (slots config intégrés dans loadBackofficeData)
 </script>
 
 <!-- Bouton flottant config photos — visible seulement si admin connecté -->
