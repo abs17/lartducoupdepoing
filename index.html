@@ -1584,6 +1584,303 @@
   .gcal-placeholder .gcp-note {
     font-size: 11px; color: var(--gray); font-style: italic; text-align: center;
   }
+
+  /* ══════════════════════════════════════════
+     RESPONSIVE — MOBILE FIRST
+     Breakpoints : 768px (tablet), 480px (mobile)
+  ══════════════════════════════════════════ */
+
+  /* ── BURGER MENU ── */
+  .nav-burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px; height: 40px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+    z-index: 110;
+    flex-shrink: 0;
+  }
+  .nav-burger span {
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--white);
+    transition: all 0.3s;
+    transform-origin: center;
+  }
+  .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Menu mobile drawer */
+  .nav-mobile-menu {
+    display: none;
+    position: fixed;
+    top: 72px; left: 0; right: 0;
+    background: rgba(10,10,10,0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(212,160,23,0.2);
+    padding: 24px 0;
+    z-index: 99;
+    flex-direction: column;
+    gap: 0;
+    transform: translateY(-10px);
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+  }
+  .nav-mobile-menu.open {
+    display: flex;
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+  .nav-mobile-menu a,
+  .nav-mobile-menu .nav-mobile-item {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gray-light);
+    text-decoration: none;
+    padding: 16px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: color 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+  .nav-mobile-menu a:hover,
+  .nav-mobile-menu .nav-mobile-item:hover { color: var(--gold); background: rgba(212,160,23,0.04); }
+  .nav-mobile-menu .nav-mobile-cta {
+    margin: 16px 32px 8px;
+    background: var(--gold);
+    color: var(--black) !important;
+    text-align: center;
+    font-weight: 700;
+    border-bottom: none !important;
+    padding: 14px 32px !important;
+  }
+  .nav-mobile-menu .nav-mobile-cta:hover { background: var(--gold-light) !important; }
+
+  @media (max-width: 768px) {
+
+    /* ── NAV ── */
+    nav {
+      padding: 0 20px;
+      height: 64px;
+    }
+    .nav-links { display: none; }
+    #btn-admin-login { display: none !important; }
+    .nav-admin-badge { display: none !important; }
+    .nav-burger { display: flex; }
+    .nav-logo { font-size: 16px; letter-spacing: 2px; }
+
+    /* ── HERO ── */
+    .hero {
+      height: auto;
+      min-height: 100svh;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 100px;
+      padding-top: 80px;
+    }
+    .hero-img-wrap {
+      position: absolute;
+      right: -20px;
+      bottom: 0;
+      height: 75%;
+      opacity: 0.35;
+    }
+    .hero-crack-border { display: none; }
+    .hero-content {
+      position: relative;
+      padding: 0 24px;
+      max-width: 100%;
+      z-index: 3;
+    }
+    .hero-title {
+      font-size: clamp(56px, 14vw, 80px);
+    }
+    .hero-subtitle {
+      font-size: clamp(18px, 5vw, 28px);
+      letter-spacing: 4px;
+    }
+    .hero-tagline { display: none; }
+    .hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .btn-primary, .btn-ghost {
+      text-align: center;
+      padding: 14px 24px;
+    }
+    .hero-stats {
+      position: relative;
+      bottom: auto; left: auto;
+      padding: 0 24px;
+      gap: 32px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .stat-num { font-size: 32px; }
+    .scroll-hint { display: none; }
+
+    /* ── SERVICES ── */
+    .services-strip {
+      grid-template-columns: 1fr;
+      padding: 40px 24px;
+      gap: 0;
+    }
+    .service-card {
+      padding: 28px 24px;
+      border-right: none;
+      border-bottom: 1px solid rgba(212,160,23,0.1);
+    }
+    .service-card:last-child { border-bottom: none; }
+
+    /* ── PHILOSOPHY ── */
+    .philosophy {
+      grid-template-columns: 1fr;
+      padding: 60px 24px;
+      gap: 40px;
+    }
+    .philosophy-visual {
+      height: 320px;
+      order: -1;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding-top: 100px;
+      padding-bottom: 32px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    .page-header::before { font-size: 80px; opacity: 0.03; }
+
+    /* ── À PROPOS ── */
+    .apropos-layout {
+      grid-template-columns: 1fr;
+    }
+    .apropos-visual {
+      position: relative;
+      top: auto;
+      height: 380px;
+      flex-direction: row;
+    }
+    .gallery-main { flex: 2; }
+    .gallery-row {
+      flex-direction: column;
+      height: auto;
+      width: 120px;
+      flex-shrink: 0;
+    }
+    .gallery-thumb { height: 120px; width: 100%; }
+    .apropos-content {
+      padding: 32px 24px;
+    }
+    .apropos-quote { font-size: clamp(20px, 5vw, 28px); }
+    .expertise-grid { grid-template-columns: 1fr; }
+
+    /* ── BOUTIQUE ── */
+    .boutique-layout {
+      grid-template-columns: 1fr;
+    }
+    .boutique-sidebar {
+      position: relative;
+      top: auto;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid rgba(212,160,23,0.1);
+      padding: 24px 0;
+    }
+    .boutique-main { padding: 24px; }
+    .boutique-info-grid { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+
+    /* ── CONTACT ── */
+    .contact-layout {
+      grid-template-columns: 1fr;
+    }
+    .contact-info-col {
+      padding: 40px 24px;
+      border-right: none;
+      border-bottom: 1px solid rgba(212,160,23,0.1);
+    }
+    .contact-form-col { padding: 32px 24px; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .form-submit {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .btn-submit { text-align: center; }
+    .form-note { max-width: 100%; }
+
+    /* ── FOOTER ── */
+    footer { padding: 40px 24px 32px; }
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .footer-bottom {
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+    }
+
+    /* ── BACKOFFICE ── */
+    .bo-body { padding: 24px; }
+    .bo-tabs { overflow-x: auto; gap: 0; }
+    .bo-tab { padding: 12px 16px; font-size: 10px; white-space: nowrap; }
+    .bo-header { padding: 0 16px; }
+    .bo-header-title { font-size: 14px; letter-spacing: 2px; }
+    .bo-products-grid { grid-template-columns: 1fr; }
+
+    /* ── WA WIDGET ── */
+    .wa-widget { bottom: 80px; right: 16px; }
+
+    /* ── FLOATING BTN ── */
+    #btn-float-config { bottom: 16px; right: 16px; }
+  }
+
+  @media (max-width: 480px) {
+    nav { padding: 0 16px; }
+    .nav-logo { font-size: 14px; letter-spacing: 1px; }
+
+    .hero-eyebrow { font-size: 9px; letter-spacing: 3px; }
+    .hero-stats { gap: 20px; }
+
+    .apropos-visual {
+      height: 280px;
+      flex-direction: column;
+    }
+    .gallery-row {
+      flex-direction: row;
+      width: auto;
+      height: 100px;
+    }
+    .gallery-thumb { height: 100%; }
+
+    .products-grid { grid-template-columns: 1fr 1fr; }
+
+    .bo-tabs { padding-bottom: 2px; }
+
+    /* Backoffice modal plein écran */
+    .bo-modal-inner {
+      max-width: 100%;
+      width: 100%;
+      max-height: 100vh;
+      border-radius: 0;
+      margin: 0;
+    }
+  }
+
+
 </style>
 </head>
 <body>
@@ -1593,19 +1890,21 @@
 ══════════════════════════════════ -->
 <nav>
   <a class="nav-logo" href="#" onclick="showPage('accueil')">L'ART DU COUP <span>DE POING</span></a>
+
+  <!-- Desktop links -->
   <ul class="nav-links">
     <li><a href="#" onclick="showPage('accueil')">Accueil</a></li>
     <li><a href="#" onclick="showPage('apropos')">Le Fondateur</a></li>
     <li id="nav-boutique-item"><a href="#" onclick="showPage('boutique')">Boutique</a></li>
     <li><a href="#" onclick="showPage('contact')" class="nav-cta">Demande de Prestation</a></li>
   </ul>
-  <!-- Badge admin connecté -->
+
+  <!-- Desktop : Badge admin + bouton login -->
   <div class="nav-admin-badge" id="nav-admin-badge" onclick="openBackoffice()">
     <img id="admin-avatar" class="admin-avatar" src="" alt="">
     <span id="admin-name-nav">Admin</span>
     <span style="color:var(--gray);font-size:10px;">▼</span>
   </div>
-  <!-- Bouton connexion admin (discret) -->
   <button id="btn-admin-login" onclick="openAdminLogin()" title="Administration"
     style="background:none;border:1px solid rgba(212,160,23,0.2);color:rgba(212,160,23,0.4);
     padding:6px 14px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;
@@ -1615,7 +1914,22 @@
     onmouseout="this.style.borderColor='rgba(212,160,23,0.2)';this.style.color='rgba(212,160,23,0.4)'">
     ⚙ ADMIN
   </button>
+
+  <!-- Mobile burger -->
+  <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- Mobile dropdown menu -->
+<div class="nav-mobile-menu" id="nav-mobile-menu">
+  <span class="nav-mobile-item" onclick="showPage('accueil');closeMobileMenu()">Accueil</span>
+  <span class="nav-mobile-item" onclick="showPage('apropos');closeMobileMenu()">Le Fondateur</span>
+  <span class="nav-mobile-item" id="nav-mobile-boutique" onclick="showPage('boutique');closeMobileMenu()">Boutique</span>
+  <span class="nav-mobile-item nav-mobile-cta" onclick="showPage('contact');closeMobileMenu()">Demande de Prestation</span>
+  <span class="nav-mobile-item" onclick="openAdminLogin();closeMobileMenu()"
+    style="font-size:11px;color:rgba(212,160,23,0.5);padding:12px 32px;">⚙ Administration</span>
+</div>
 
 <!-- ══════════════════════════════════
      PAGE ACCUEIL
@@ -2308,6 +2622,36 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+
+// ══════════════════════════════════════════
+// MENU MOBILE
+// ══════════════════════════════════════════
+function toggleMobileMenu() {
+  const menu   = document.getElementById('nav-mobile-menu');
+  const burger = document.getElementById('nav-burger');
+  const isOpen = menu.classList.contains('open');
+  if (isOpen) {
+    menu.classList.remove('open');
+    burger.classList.remove('open');
+  } else {
+    menu.classList.add('open');
+    burger.classList.add('open');
+  }
+}
+function closeMobileMenu() {
+  document.getElementById('nav-mobile-menu').classList.remove('open');
+  document.getElementById('nav-burger').classList.remove('open');
+}
+// Fermer le menu au clic en dehors
+document.addEventListener('click', e => {
+  const menu   = document.getElementById('nav-mobile-menu');
+  const burger = document.getElementById('nav-burger');
+  if (!menu.contains(e.target) && !burger.contains(e.target)) {
+    menu.classList.remove('open');
+    burger.classList.remove('open');
+  }
+});
+
 // ── Page navigation
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -2579,6 +2923,8 @@ function saveBoutiqueSettings() {
 function applyBoutiqueSettings(bs) {
   const navItem = document.getElementById('nav-boutique-item');
   if (navItem) navItem.style.display = bs.visible !== false ? '' : 'none';
+  const navMobile = document.getElementById('nav-mobile-boutique');
+  if (navMobile) navMobile.style.display = bs.visible !== false ? '' : 'none';
   const banner = document.querySelector('.vitrine-banner');
   if (banner) {
     if (bs.open) {
